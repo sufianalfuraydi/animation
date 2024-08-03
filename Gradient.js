@@ -18,7 +18,11 @@ class Uniform {
 
     update(location, gl) {
         if (this.value !== undefined) {
-            gl[`uniform${this.typeFn}`](location, this.value);
+            if (this.typeFn.includes("Matrix")) {
+                gl[`uniform${this.typeFn}`](location, false, this.value);
+            } else {
+                gl[`uniform${this.typeFn}`](location, this.value);
+            }
         }
     }
 }
@@ -28,15 +32,13 @@ class MiniGl {
         this.canvas = canvas;
         this.gl = this.canvas.getContext("webgl", { antialias: true });
         this.meshes = [];
-        this.setSize(width, height);
-
-        // Ensure that commonUniforms uses the right context
         this.commonUniforms = {
             projectionMatrix: new Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
             modelViewMatrix: new Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
             resolution: new Uniform({ type: "vec2", value: [width, height] }),
             aspectRatio: new Uniform({ type: "float", value: width / height }),
         };
+        this.setSize(width, height);
     }
 
     setSize(width, height) {

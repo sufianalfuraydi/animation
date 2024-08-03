@@ -2,6 +2,27 @@ function normalizeColor(hexCode) {
     return [(hexCode >> 16 & 255) / 255, (hexCode >> 8 & 255) / 255, (255 & hexCode) / 255];
 }
 
+class Uniform {
+    constructor({ type, value }) {
+        this.type = type;
+        this.value = value;
+        this.typeFn = {
+            float: "1f",
+            int: "1i",
+            vec2: "2fv",
+            vec3: "3fv",
+            vec4: "4fv",
+            mat4: "Matrix4fv"
+        }[type] || "1f";
+    }
+
+    update(location, gl) {
+        if (this.value !== undefined) {
+            gl[`uniform${this.typeFn}`](location, this.value);
+        }
+    }
+}
+
 class MiniGl {
     constructor(canvas, width, height) {
         this.canvas = canvas;
@@ -11,10 +32,10 @@ class MiniGl {
 
         // Ensure that commonUniforms uses the right context
         this.commonUniforms = {
-            projectionMatrix: new MiniGl.Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
-            modelViewMatrix: new MiniGl.Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
-            resolution: new MiniGl.Uniform({ type: "vec2", value: [width, height] }),
-            aspectRatio: new MiniGl.Uniform({ type: "float", value: width / height }),
+            projectionMatrix: new Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
+            modelViewMatrix: new Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
+            resolution: new Uniform({ type: "vec2", value: [width, height] }),
+            aspectRatio: new Uniform({ type: "float", value: width / height }),
         };
     }
 
@@ -42,27 +63,6 @@ class MiniGl {
         this.gl.clearColor(0, 0, 0, 0);
         this.gl.clearDepth(1);
         this.meshes.forEach(mesh => mesh.draw());
-    }
-
-    static Uniform = class {
-        constructor({ type, value }) {
-            this.type = type;
-            this.value = value;
-            this.typeFn = {
-                float: "1f",
-                int: "1i",
-                vec2: "2fv",
-                vec3: "3fv",
-                vec4: "4fv",
-                mat4: "Matrix4fv"
-            }[type] || "1f";
-        }
-
-        update(location) {
-            if (this.value !== undefined) {
-                this.gl[`uniform${this.typeFn}`](location, this.value);
-            }
-        }
     }
 }
 
@@ -93,4 +93,3 @@ class Gradient {
 }
 
 window.Gradient = Gradient;
-

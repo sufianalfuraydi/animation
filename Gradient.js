@@ -11,10 +11,10 @@ class MiniGl {
 
         // Ensure that commonUniforms uses the right context
         this.commonUniforms = {
-            projectionMatrix: new this.Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
-            modelViewMatrix: new this.Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
-            resolution: new this.Uniform({ type: "vec2", value: [width, height] }),
-            aspectRatio: new this.Uniform({ type: "float", value: width / height }),
+            projectionMatrix: new MiniGl.Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
+            modelViewMatrix: new MiniGl.Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
+            resolution: new MiniGl.Uniform({ type: "vec2", value: [width, height] }),
+            aspectRatio: new MiniGl.Uniform({ type: "float", value: width / height }),
         };
     }
 
@@ -44,7 +44,7 @@ class MiniGl {
         this.meshes.forEach(mesh => mesh.draw());
     }
 
-    Uniform = class {
+    static Uniform = class {
         constructor({ type, value }) {
             this.type = type;
             this.value = value;

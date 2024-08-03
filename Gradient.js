@@ -8,6 +8,8 @@ class MiniGl {
         this.gl = this.canvas.getContext("webgl", { antialias: true });
         this.meshes = [];
         this.setSize(width, height);
+
+        // Ensure that commonUniforms uses the right context
         this.commonUniforms = {
             projectionMatrix: new this.Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
             modelViewMatrix: new this.Uniform({ type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }),
